@@ -31,7 +31,7 @@ public class UserController {
 
         if(user.isEmpty())
         {
-            /*Exception will be seen in response if dev tools plugin exists in pom
+           /* Exception will be seen in response if dev tools plugin exists in pom
             and if the application is not run from jar (in case of jar the dev tools will be automatically disabled)*/
             throw new UserNotFoundException("id:" + id);
         }
