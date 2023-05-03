@@ -1,6 +1,8 @@
 package com.springboot.learnspringboot.socialmedia;
 
 import jakarta.validation.Valid;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -8,6 +10,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 public class UserController {
@@ -26,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public UserV1 retrieveUser(@PathVariable int id)
+    public EntityModel<UserV1> retrieveUser(@PathVariable int id)
     {
         Optional<UserV1> user = daoService.findUser(id);
 
@@ -37,7 +41,12 @@ public class UserController {
             throw new UserNotFoundException("id:" + id);
         }
 
-        return user.get();
+        EntityModel<UserV1> entityModel = EntityModel.of(user.get());
+        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).retrieveAllUsers());// Add link for user to retrieve all users
+
+        entityModel.add(link.withRel("all-users"));
+
+        return entityModel;
     }
 
     @PostMapping("/users")
