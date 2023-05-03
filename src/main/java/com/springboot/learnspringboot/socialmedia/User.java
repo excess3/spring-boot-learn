@@ -1,10 +1,16 @@
 package com.springboot.learnspringboot.socialmedia;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 public class User {
     private Integer id;
+    @NotBlank
     private String name;
+    @Past // Validation
     private LocalDate birthDate;
 
     public User(Integer id, String name, LocalDate birthDate) {

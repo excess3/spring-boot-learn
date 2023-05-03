@@ -1,5 +1,6 @@
 package com.springboot.learnspringboot.socialmedia;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User user)
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) // by adding @Valid annotation we say that validation inside User bean should be used
     {
         User savedUser = daoService.createUser(user);
 
@@ -50,5 +51,11 @@ public class UserController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable int id)
+    {
+        daoService.deleteById(id);
     }
 }
