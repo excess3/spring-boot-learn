@@ -2,21 +2,17 @@ package com.springboot.learnspringboot.socialmedia;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-public class User {
+public class UserV2 {
     private Integer id;
     @NotBlank
     private String name;
-    @Past // Validation
-    private LocalDate birthDate;
 
-    public User(Integer id, String name, LocalDate birthDate) {
+    public UserV2(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.birthDate = birthDate;
     }
 
     public Integer getId() {
@@ -35,20 +31,12 @@ public class User {
         this.name = name;
     }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", birthDate=" + birthDate +
                 '}';
     }
 }

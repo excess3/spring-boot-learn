@@ -20,15 +20,15 @@ public class UserController {
 
     //http://localhost:9090/users
     @GetMapping("/users")
-    public List<User> retrieveAllUsers()
+    public List<UserV1> retrieveAllUsers()
     {
         return daoService.findAll();
     }
 
     @GetMapping("/users/{id}")
-    public User retrieveUser(@PathVariable int id)
+    public UserV1 retrieveUser(@PathVariable int id)
     {
-        Optional<User> user = daoService.findUser(id);
+        Optional<UserV1> user = daoService.findUser(id);
 
         if(user.isEmpty())
         {
@@ -41,9 +41,9 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) // by adding @Valid annotation we say that validation inside User bean should be used
+    public ResponseEntity<UserV1> createUser(@Valid @RequestBody UserV1 user) // by adding @Valid annotation we say that validation inside User bean should be used
     {
-        User savedUser = daoService.createUser(user);
+        UserV1 savedUser = daoService.createUser(user);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
