@@ -11,6 +11,14 @@ public class Post {
 
     private String description;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY) // means when we fetch post we don't need to fetch user details
     @JsonIgnore
     private User user;

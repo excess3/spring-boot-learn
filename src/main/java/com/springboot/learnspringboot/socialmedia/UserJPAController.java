@@ -1,5 +1,6 @@
 package com.springboot.learnspringboot.socialmedia;
 
+import com.springboot.learnspringboot.socialmedia.jpa.PostRepository;
 import com.springboot.learnspringboot.socialmedia.jpa.UserRepository;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -17,10 +18,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 public class UserJPAController {
 
-    private UserRepository userRepository;//new
+    private UserRepository userRepository;
+    private PostRepository postRepository;
 
-    public UserJPAController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserJPAController(UserRepository userRepository, PostRepository postRepository) {
+        this.userRepository = userRepository; this.postRepository = postRepository;
     }
 
     //http://localhost:9090/users
@@ -75,5 +77,26 @@ public class UserJPAController {
         Optional<User> user = userRepository.findById(id);
 
         return user.get().getPosts();
+    }
+
+
+
+
+    /*Posts APIs ---------------------------------------*/
+    @PostMapping("/users/{id}/posts")
+    public ResponseEntity<Post> createPostForUser(@PathVariable int id, @RequestBody Post post) // by adding @Valid annotation we say that validation inside User bean should be used
+    {
+        Optional<User> user = userRepository.findById(id);
+
+        post.setUser(user.get());
+
+        Post savedPost = postRepository.save(post);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedPost.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 }
