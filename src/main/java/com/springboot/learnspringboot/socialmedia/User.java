@@ -19,6 +19,14 @@ public class User {
     private String name;
     private LocalDate birthDate;
 
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
     @OneToMany(mappedBy = "user") // field which mapped to this specific user in Post entity, it creates user_id column in posts table
     @JsonIgnore
     private List<Post> posts;
