@@ -1,10 +1,13 @@
 package com.springboot.learnspringboot.socialmedia;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity(name = "user_details")
@@ -15,6 +18,10 @@ public class User {
     private Integer id;
     private String name;
     private LocalDate birthDate;
+
+    @OneToMany(mappedBy = "user") // field which mapped to this specific user in Post entity, it creates user_id column in posts table
+    @JsonIgnore
+    private List<Post> posts;
 
     public User() {
     }
