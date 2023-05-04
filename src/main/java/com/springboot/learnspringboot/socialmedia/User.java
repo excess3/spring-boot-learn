@@ -1,19 +1,25 @@
 package com.springboot.learnspringboot.socialmedia;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 import java.time.LocalDate;
 
 
-public class UserV1 {
+@Entity(name = "user_details")
+public class User {
+
+    @Id
+    @GeneratedValue
     private Integer id;
-    @NotBlank
     private String name;
-    @Past // Validation
     private LocalDate birthDate;
 
-    public UserV1(Integer id, String name, LocalDate birthDate) {
+    public User() {
+    }
+
+    public User(Integer id, String name, LocalDate birthDate) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;

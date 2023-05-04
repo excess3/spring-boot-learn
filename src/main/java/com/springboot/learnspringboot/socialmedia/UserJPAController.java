@@ -1,6 +1,6 @@
 package com.springboot.learnspringboot.socialmedia;
 
-import jakarta.validation.Valid;
+import com.springboot.learnspringboot.socialmedia.jpa.UserRepository;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -11,28 +11,29 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-public class UserController {
+public class UserJPAController {
 
-    private UserDaoService daoService;
+    private UserRepository userRepository;//new
 
-    public UserController(UserDaoService service) {
-        this.daoService = service;
+    public UserJPAController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     //http://localhost:9090/users
     @GetMapping("/users")
-    public List<UserV1> retrieveAllUsers()
+    public List<User> retrieveAllUsers()
     {
-        return daoService.findAll();
+        return userRepository.findAll();
     }
 
     @GetMapping("/users/{id}")
-    public EntityModel<UserV1> retrieveUser(@PathVariable int id)
+    public EntityModel<User> retrieveUser(@PathVariable int id)
     {
-        Optional<UserV1> user = daoService.findUser(id);
+        Optional<User> user = userRepository.findById(id);
 
         if(user.isEmpty())
         {
@@ -41,7 +42,7 @@ public class UserController {
             throw new UserNotFoundException("id:" + id);
         }
 
-        EntityModel<UserV1> entityModel = EntityModel.of(user.get());
+        EntityModel<User> entityModel = EntityModel.of(user.get());
         WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).retrieveAllUsers());// Add link for user to retrieve all users
 
         entityModel.add(link.withRel("all-users"));
@@ -50,9 +51,9 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserV1> createUser(@Valid @RequestBody UserV1 user) // by adding @Valid annotation we say that validation inside User bean should be used
+    public ResponseEntity<User> createUser(@RequestBody User user) // by adding @Valid annotation we say that validation inside User bean should be used
     {
-        UserV1 savedUser = daoService.createUser(user);
+        User savedUser = userRepository.save(user);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -65,6 +66,6 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable int id)
     {
-        daoService.deleteById(id);
+        userRepository.deleteById(id);
     }
 }
