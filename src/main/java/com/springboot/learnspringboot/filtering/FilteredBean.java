@@ -1,13 +1,12 @@
 package com.springboot.learnspringboot.filtering;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties("field1")
+import com.fasterxml.jackson.annotation.JsonFilter;
+
+@JsonFilter("SomeBeanFilter")
 public class FilteredBean {
 
     private String field1;
-    @JsonIgnore
     private String field2;
     private String field3;
 
